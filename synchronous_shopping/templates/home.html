@@ -1,0 +1,65 @@
+{% extends "./template.html" %} {% block title %} Synchronous Shopping {% endblock %} {% block body %} {% if messages %} {% for message in messages %}
+<div class="alert alert-dismissible alert-success">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong class="text-dark"> {{ message }} </strong>
+</div>
+{% endfor %} {% endif %}
+
+<h2>Synchronous Shopping</h2>
+<hr class="solid" />
+<!-- Button trigger modal -->
+<!-- 
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Example</button>
+<hr class="solid">
+-->
+<form id="form-parameters" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="numShops">Number of shopping centers:</label>
+        <input class="form-control" type="number" id="numShops" name="numShops" pattern="^\d*$" required />
+    </div>
+
+    <div class="form-group">
+        <label for="numRoads">Number of roads:</label>
+        <input class="form-control" type="number" id="numRoads" name="numRoads" pattern="^\d*$" required />
+    </div>
+
+    <div class="form-group">
+        <label for="numFish">Number of types of fish:</label>
+        <input class="form-control" type="number" id="numFish" name="numFish" pattern="^\d*$" required />
+    </div>
+
+    <div id="result" class="alert alert-success" style="display: none;"></div>
+
+    <div class="row form-group">
+        <div id="shops_fish" class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6"></div>
+        <div id="roads_time" class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6"></div>
+    </div>
+</form>
+
+<button type="button" class="btn btn-primary" onclick="sendParameters()">Calculate time</button>
+
+<!-- Modal -->
+<!--
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                This web page solves the problem of synchronous shopping available in HackRank.
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+
+{% endblock %}
