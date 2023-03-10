@@ -20,7 +20,38 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
+/**
+ * This JavaScript function appears to be sending form data to a server using
+ * a POST request and then receiving and displaying the response. Here's a
+ * breakdown of what the function is doing:
+ *
+ * 1. The function begins by creating a new FormData object using the HTML
+ * form with the ID "form-parameters".
+ *
+ * 2. The function then retrieves the values of three input fields from
+ * the form and stores them in variables.
+ *
+ * 3. The function constructs a URL-encoded string containing the values of
+ * the input fields and some additional data related to shopping centers and roads.
+ *
+ * 4. The function sends a POST request to a specific URL
+ * (/api/v1/synchronous_shopping/) using the fetch() function. The request
+ * includes the URL-encoded string as the request body, along with some
+ * headers and cookies.
+ *
+ * 5. Once the server responds to the request, the function extracts the JSON
+ * response using the .json() method and then displays the minimum time value
+ * returned by the server on the web page.
+ *
+ * 6. The function also listens to two input fields for changes, "numShops"
+ * and "numRoads", and generates additional input fields based on the number
+ * specified. These new input fields are used to build the data sent in the
+ * POST request.
+ *
+ * Overall, this function appears to be part of a larger program that is
+ * designed to help users plan a shopping trip between multiple shopping centers,
+ * using data about travel times and available fish types at each center.
+ */
 function sendParameters() {
     var data_form = new FormData(document.getElementById("form-parameters"));
     const n_numRoads = numRoads.value;

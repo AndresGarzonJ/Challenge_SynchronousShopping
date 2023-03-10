@@ -10,19 +10,27 @@ import heapq
 
 
 def home(request):
-    """View for the main template
-
-    Gets all contacts, and can filter them according to the search
-    parameter which can be name or phoneNumber.
+    """View for the home template
     """
     messages.success(request, "¡Welcome!")
     return render(request, "home.html", {"data": ""})
 
 
 def registerSynchronousShopping(request):
-    """View to register a Contact
-
-    Capture the name, phoneNumber, and email, to register/create a contact.
+    """
+    This is a view function that registers a shopping event
+    synchronously. It takes a request object as a parameter,
+    which contains information about the incoming HTTP request.
+    The function first decodes the request body using the utf-8
+    encoding. It then splits the body string into three parts
+    using the & separator, and extracts the parameters,
+    shopping centers, and roads data. The roads data is
+    processed to convert it into a list of tuples, and the
+    parameters are converted from strings to integers. The
+    shortest_path_bitmask() function is called with the
+    extracted data to calculate the shortest path for the shopping
+    event. Finally, a new record is created in the SynchronousShopping
+    model with the extracted data and the calculated duration time.
     """
     # logger = logging.getLogger(__name__)
     body_unicode = request.body.decode("utf-8")
@@ -88,6 +96,24 @@ def registerSynchronousShopping(request):
 
 
 def shortest_path_bitmask(n, m, k, shops, roads):
+    """
+    This function calculates the shortest path for a shopping event using
+    bitmasking. It takes four parameters:
+    n - the number of nodes in the graph,
+    m - the number of edges in the graph,
+    k - the number of shopping centers,
+    shops - a list of bitmasks representing the items available at each
+    shopping center, and
+    roads - a list of tuples representing the edges in the graph.
+
+    The function first constructs a graph from the edges data,
+    and initializes a distance matrix with all distances set to infinity.
+    It then initializes the start node with a distance of 0 and a bitmask
+    representing no items bought. A heap is used to keep track of the nodes
+    to be visited, and the function uses a bitwise AND operation to update
+    the bitmask when visiting each node. The function returns the maximum
+    distance calculated for the shopping event.
+    """
     graph = [[] for _ in range(n)]
     for i in range(m):
         u, v, t = roads[i]
