@@ -64,18 +64,21 @@ function sendParameters() {
     //Create URL POST
     parameters = n_numShops + "," + n_numRoads + "," + n_numFish;
     for (let i = 0; i < n_numShops; i++) {
+        let t_shoping_centers = document.getElementById(`shoppingCenter${i}`).value;
         if (shoping_centers == "") {
-            shoping_centers = document.getElementById(`shoppingCenter${i}`).value;
+            shoping_centers = t_shoping_centers.trim().replace(/\s+/g, ',');
         } else {
-            shoping_centers = shoping_centers + "-" + document.getElementById(`shoppingCenter${i}`).value;
+            shoping_centers = shoping_centers + "-" + t_shoping_centers.trim().replace(/\s+/g, ',');
         }
     }
 
     for (let i = 0; i < n_numRoads; i++) {
+        let t_roads = document.getElementById(`road${i}`).value;
+
         if (roads == "") {
-            roads = document.getElementById(`road${i}`).value;
+            roads = t_roads.trim().replace(/\s+/g, ',');
         } else {
-            roads = roads + "-" + document.getElementById(`road${i}`).value;
+            roads = roads + "-" + t_roads.trim().replace(/\s+/g, ',');
         }
     }
 
@@ -114,6 +117,7 @@ numShops.addEventListener("change", function () {
         const input = document.createElement("input");
         input.setAttribute("class", "form-control");
         input.setAttribute("type", "text");
+        input.setAttribute("placeholder", "k_fish fish fish ...");
         input.setAttribute("id", `shoppingCenter${i}`);
         input.setAttribute("name", `shoppingCenter${i}`);
         input.setAttribute("required", "");
@@ -140,7 +144,7 @@ numRoads.addEventListener("change", function () {
         const input = document.createElement("input");
         input.setAttribute("class", "form-control");
         input.setAttribute("type", "text");
-        input.setAttribute("placeholder", "Shop_a,Shop_b,time");
+        input.setAttribute("placeholder", "Shop_a Shop_b time");
         input.setAttribute("id", `road${i}`);
         input.setAttribute("name", `road${i}`);
         input.setAttribute("required", "");
