@@ -30,24 +30,16 @@ def registerSynchronousShopping(request):
     event. Finally, a new record is created in the SynchronousShopping
     model with the extracted data and the calculated duration time.
     """
-    logger = logging.getLogger(__name__)
+
     body_unicode = request.body.decode("utf-8")
 
     # Split the data string into three parts using the "&" separator
     parts = body_unicode.split("&")
 
-    # logger.error("body_unicode")
-    # logger.error(body_unicode)
-
     # Separate the parameters, shopping_centers, and roads data
     _parameters = parts[0].split("=")[1]
     _shopping_centers = parts[1].split("=")[1]
     _roads = parts[2].split("=")[1]
-
-    # logger.error("_shopping_centers")
-    # logger.error(_shopping_centers)
-    # logger.error("_roads")
-    # logger.error(_roads)
 
     # split the string by the '-' delimiter
     split_roads = _roads.split("-")
@@ -57,25 +49,18 @@ def registerSynchronousShopping(request):
     # pack the resulting elements into a tuple and append to a new list
     new_roads = [tuple(map(int, r.split(","))) for r in split_roads]
 
-    # logger.error("new_roads")
-    # logger.error(new_roads)
-
     n, m, k = _parameters.split(",")
     n = int(n)
     m = int(m)
     k = int(k)
 
-    # logger.error("n, m, k")
-    # logger.error(str(n) + "," + str(m) + "," + str(k))
-    # logger.error("_shopping_centers")
-    # logger.error(_shopping_centers)
-
     # Convert the shop variables to binary arrays
     new_shops = []
-    shop_bins = []
+    # shop_bins = []
     shop_list = []
     for s in _shopping_centers.split("-"):
         new_shops.append(s)
+        """
         s_list = [int(x) for x in s.split(",")]
         bits = ["0"] * k  # create an empty list of 8 zeros
 
@@ -87,19 +72,19 @@ def registerSynchronousShopping(request):
 
         # combine the bits into a string and print the result
         shop_bins.append("".join(bits))
+        """
 
-    shop_list = [[int(num) for num in string.split(",")] for string in new_shops]
+    shop_list = [tuple(int(num) for num in string.split(","))
+                 for string in new_shops]
 
-    # logger.error("n"+"="+str(n))
-    # logger.error("m"+"="+str(m))
-    # logger.error("k"+"="+str(k))
-    logger.error("shop_bins" + "=" + str(shop_bins))
-    logger.error("new_roads" + "=" + str(new_roads))
-    logger.error("new_shops" + "=" + str(new_shops))
-    logger.error("shop_list" + "=" + str(shop_list))
+    # shop_bins=['00001', '00010', '00100', '01000', '10000']
+    # new_roads=[(1, 2, 3), (1, 2, 3), (1, 2, 3), (1, 2, 3), (1, 2, 3)]
+    # new_shops=['1,1', '1,2', '1,3', '1,4', '1,5']
+    # shop_list=[[1, 1], [1, 2], [1, 3], [1, 4], [1, 5]]
 
-    _duration_time = shortest_path_bitmask(n, m, k, shop_bins, new_roads)
-
+    _duration_time = shortest_path_bitmask(n, m, k, shop_list, new_roads)
+    logger = logging.getLogger(__name__)
+    logger.error("result =" + str(_duration_time))
     SynchronousShopping.objects.create(
         parameters=_parameters,
         shoping_centers=_shopping_centers,
@@ -111,64 +96,46 @@ def registerSynchronousShopping(request):
 
 
 def shortest_path_bitmask(n, m, k, shops, roads):
-    """
-    This function calculates the shortest path for a shopping event using
-    bitmasking. It takes four parameters:
-    n - the number of nodes in the graph,
-    m - the number of edges in the graph,
-    k - the number of shopping centers,
-    shops - a list of bitmasks representing the items available at each
-    shopping center, and
-    roads - a list of tuples representing the edges in the graph.
+    INF = 10**9
 
-    The function first constructs a graph from the edges data,
-    and initializes a distance matrix with all distances set to infinity.
-    It then initializes the start node with a distance of 0 and a bitmask
-    representing no items bought. A heap is used to keep track of the nodes
-    to be visited, and the function uses a bitwise AND operation to update
-    the bitmask when visiting each node. The function returns the maximum
-    distance calculated for the shopping event.
-    """
-    logger = logging.getLogger(__name__)
-    graph = [[] for _ in range(n)]
+    dist = [[INF] * (1 << 10) for _ in range(n + 1)]
+    a = [0] * (n + 1)
+
+    for i in range(1, n + 1):
+        fish = shops[i-1][0]
+        for j in range(1, fish+1):
+            x = shops[i-1][j]
+            a[i] |= 1 << (x - 1)
+
+    adj = [[] for _ in range(n + 1)]
+
     for i in range(m):
-        u, v, t = roads[i]
-        graph[u - 1].append((v - 1, t))
-        graph[v - 1].append((u - 1, t))
-    # shops[i] is the bitmask for shopping center i
-    # 2**k is the bitmask representing all the fish
-    dist = [[float("inf")] * (2**k) for _ in range(n)]
-    # initializes the distance between node 0 and all the possible
-    # bitmasks representing the items that can be bought from the
-    # shopping centers.
-    dist[0][2**k - 1] = 0
-    # The variable heap is a list of tuples representing the
-    # nodes to be visited.
-    # heap = [(0, 0, 2**k - 1)]  # (distance, node, bitmask)
-    heap = [(0, 0, 2**k - 1)]  # (distance, node, bitmask)
-    while heap:
-        # pops the node with the smallest distance
-        d, u, mask = heapq.heappop(heap)
-        # checks whether the current shortest distance to
-        # node u with the current bitmask mask is less than
-        # the distance d of the popped node from the heap.
-        if dist[u][mask] < d:
-            continue
-        for v, t in graph[u]:
-            new_mask = mask & int(shops[v], 2)
-            new_dist = d + t
-            if dist[v][new_mask] > new_dist:
-                dist[v][new_mask] = new_dist
-                heapq.heappush(heap, (new_dist, v, new_mask))
-                logger.error(
-                    str(heap)
-                )
+        x, y, z = roads[i]
+        adj[x].append((y, z))
+        adj[y].append((x, z))
 
-    # logger.error(dist)
-    logger.error(dist[n - 1][0])
-    logger.error(new_dist)
-    # logger.error(str(v))
-    # logger.error(str(new_mask))
-    # dist[n - 1][0]
-    return new_dist
-    # return dist[n - 1][0]
+    def push(vn, vm, vv):
+        if dist[vn][vm] <= vv:
+            return
+        dist[vn][vm] = vv
+        S.append((vv, vn, vm))
+
+    S = []
+    push(1, a[1], 0)
+
+    while S:
+        S.sort()
+        d, vn, vm = S.pop(0)
+        if d > dist[vn][vm]:
+            continue
+        for u, w in adj[vn]:
+            push(u, vm | a[u], dist[vn][vm] + w)
+
+    ret = INF
+
+    for i in range(1 << k):
+        for j in range(1 << k):
+            if (i | j) == (1 << k) - 1:
+                ret = min(ret, max(dist[n][i], dist[n][j]))
+
+    return ret

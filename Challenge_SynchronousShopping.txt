@@ -82,33 +82,3 @@ Evaluación:
 				{'minimum_time': 30}
 
 	4. [1 puntos] Documento con especificación de clases y modelo de datos usado		
-
-
-
-Bitville is a seaside city that has a number of shopping centers connected by bidirectional roads, each of which has a travel time associated with it. Each of the shopping centers may have a fishmonger who sells one or more kinds of fish. Two cats, Big Cat and Little Cat, are at shopping center 1  (each of the centers is numbered consecutively from 1  to n). They have a list of fish they want to purchase, and to save time, they will divide the list between them. Determine the total travel time for the cats to purchase all of the types of fish, finally meeting at shopping center n. Their paths may intersect, they may backtrack through shopping center n, and one may arrive at a different time than the other. The minimum time to determine is when both have arrived at the destination.
-
-For example, there are n=5 shopping centers selling k=3 types of fish. The following is a graph that shows a possible layout of the shopping centers connected by m=4 paths. Each of the centers is labeled center number/fish types offered/cat(s) that visit(s). Here B and L represent Big Cat and Little Cat, respectively. In this example, both cats take the same path, i.e. 1 → 3 → 5 and arrive at time 15 + 5 = 20 having purchased all three types of fish they want. Neither cat visits shopping centers 2 or 4.
-
-As an example, n=5, m=5, and k=5. And store 1 has only one type of fish and it is 1. Store 2 has fish type 1 and 2. Store 3 has only one type of fish and it is 3. Store 5 has only one type of fish and it is 5. Now, the time duration between store 1 and store 2 is 10. The duration time between store 3 and store 5 is 10. The duration time between store 4 and store 5 is 10. And the shortest time it takes for the two cats to buy all types of fish is equal to 30.
-
-Como ejemplo, n=5, m=5, y k=5. Y la tienda 1 tiene un solo tipo de pez y es el 1, es decir, 00001. La tienda 2 tiene los tipo de pez 1 y 2, es decir, 00011. La tienda 3 tiene un solo tipo de pez y es el 3, es decir, 00100. La tienda 4 tiene los tipo de pez 1 y 4, es decir, 01001. La tienda 5 tiene un solo tipo de pez y es el 5, es decir, 10000. Ahora, el tiempo de duracion entre la tienda 1 y la tienda 2 es 10. El tiempo de duracion entre la tienda 1 y la tienda 3 es 10. El tiempo de duracion entre la tienda 2 y la tienda 4 es 10.
-El tiempo de duracion entre la tienda 3 y la tienda 5 es 10. El tiempo de duracion entre la tienda 4 y la tienda 5 es 10. Y el menor tiempo que le toma a los dos gatos comprar todos los tipos de pescado es igual a 30.
----
-
-Bitville is a seaside city that has a number of shopping centers connected by bidirectional roads, each of which has a travel time associated with it. Each of the shopping centers may have a fishmonger who sells one or more kinds of fish. Two cats, Big Cat and Little Cat, are at shopping center 1  (each of the centers is numbered consecutively from 1  to n). They have a list of fish they want to purchase, and to save time, they will divide the list between them. Determine the total travel time for the cats to purchase all of the types of fish, finally meeting at shopping center n. Their paths may intersect, they may backtrack through shopping center n, and one may arrive at a different time than the other. The minimum time to determine is when both have arrived at the destination.
-
-As an example, n=5, m=5, and k=5. And store 1 has only one type of fish and it is 1, i.e. 00001. Store 2 has fish type 1 and 2, i.e., 00011. Store 3 has only one type of fish and it is 3, i.e. 00100. Store 4 has fish type 1 and 4, i.e. 01001. Store 5 has only one type of fish and it is 5, i.e. 10000. Now, the time duration between store 1 and store 2 is 10. The time duration between store 1 and store 3 is 10. The duration time between store 3 and store 5 is 10. The duration time between store 4 and store 5 is 10. And the shortest time it takes for the two cats to buy all types of fish is equal to 30.
-
-En Python, Como puedo convertir en python la siguiente variable:
-
-roads=1,2,10-1,3,10-2,4,10-3,5,10-4,5,10
-
-En la siguiente lista:
-
-edges = [(1, 2, 10), (1, 3, 10), (3, 5, 10), (4, 5, 10)]
-
-1 2 10
-1 3 10
-2 4 10
-3 5 10
-4 5 10

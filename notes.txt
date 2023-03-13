@@ -65,3 +65,11 @@
     python manage.py runserver
     
 
+ps -aux | grep sh
+kill <pid>
+
+source Challenge_SynchronousShopping/venv/bin/activate
+sh SynchronousShopping.sh
+
+python Challenge_SynchronousShopping/synchronous_shopping/manage.py runserver 0.0.0.0:8000
+nano Challenge_SynchronousShopping/synchronous_shopping/synchronous_shopping/settings.py 
