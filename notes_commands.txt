@@ -1,0 +1,72 @@
+############## Prerequisites and Goals ##############
+# Creare Droplet
+
+# Terminal DigitalOcean
+    ssh root@your_server_ip
+    adduser andres
+    usermod -aG sudo andres
+
+#ssh - On my local pc
+    ssh-keygen
+    cat ~/.ssh/id_rsa.pub
+    # Copiar clave 
+
+#ssh - Terminal DigitalOcean
+    su - andres
+    mkdir ~/.ssh
+    chmod 700 ~/.ssh
+    nano ~/.ssh/authorized_keys
+    chmod 600 ~/.ssh/authorized_keys
+    exit
+
+# Disabling password authentication
+    sudo nano /etc/ssh/sshd_config
+        PasswordAuthentication no
+        PubkeyAuthentication yes
+        ChallengeResponseAuthentication no
+    sudo systemctl reload sshd
+
+# Establish connection via ssh - Terminal on my pc
+    ssh andres@your_server_ip
+
+############## Install the Packages from the Ubuntu Repositories ##############
+# Terminal DigitalOcean
+    sudo apt-get update
+    sudo apt-get install python3-pip python3-dev libpq-dev postgresql postgresql-contrib nginx
+    sudo -H pip3 install --upgrade pip
+    sudo -H pip3 install virtualenv
+
+############## Create the PostgreSQL Database and User ##############
+# Terminal DigitalOcean
+    sudo -u postgres psql
+    CREATE DATABASE db_sshopping;
+    
+    CREATE USER admin_sshopping WITH PASSWORD 'Nb%v6T#dYw@qGfKY';
+    ALTER ROLE admin_sshopping SET client_encoding TO 'utf8';
+    ALTER ROLE admin_sshopping SET default_transaction_isolation TO 'read committed';
+    ALTER ROLE admin_sshopping SET timezone TO 'UTC';
+    GRANT ALL PRIVILEGES ON DATABASE db_sshopping TO admin_sshopping;
+    #Salir
+    \q
+
+    [Windows] Programs/PostgreSQL/Shell
+
+############## Create the Model ##############
+# Model.py
+
+# Terminal
+    python manage.py migrate
+    python manage.py makemigrations
+    python manage.py makemigrations api
+    python manage.py migrate
+    
+    python manage.py createsuperuser
+
+    python manage.py runserver
+    
+############## Kill process ##############
+    ps -aux | grep sh
+    kill <pid>
+
+############## Activate virtual environment in DigitalOcean ##############
+    source <dir>/venv/bin/activate
