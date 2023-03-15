@@ -3,17 +3,20 @@ from .models import SynchronousShopping
 from django.contrib import messages
 from django.http import JsonResponse
 import logging
-import heapq
+# from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
 
+@csrf_exempt
 def home(request):
     """View for the home template"""
     messages.success(request, "¡Welcome!")
     return render(request, "home.html", {"data": ""})
 
 
+@csrf_exempt
 def registerSynchronousShopping(request):
     """
     This is a view function that registers a shopping event
@@ -30,8 +33,10 @@ def registerSynchronousShopping(request):
     event. Finally, a new record is created in the SynchronousShopping
     model with the extracted data and the calculated duration time.
     """
+    logger = logging.getLogger(__name__)
 
     body_unicode = request.body.decode("utf-8")
+    logger.error("body_unicode =" + str(body_unicode))
 
     # Split the data string into three parts using the "&" separator
     parts = body_unicode.split("&")
@@ -82,8 +87,7 @@ def registerSynchronousShopping(request):
     # new_shops=['1,1', '1,2', '1,3', '1,4', '1,5']
     # shop_list=[[1, 1], [1, 2], [1, 3], [1, 4], [1, 5]]
 
-    _duration_time = shortest_path_bitmask(n, m, k, shop_list, new_roads)
-    logger = logging.getLogger(__name__)
+    _duration_time = shortest_path(n, m, k, shop_list, new_roads)
     logger.error("result =" + str(_duration_time))
     SynchronousShopping.objects.create(
         parameters=_parameters,
@@ -95,7 +99,7 @@ def registerSynchronousShopping(request):
     return JsonResponse(data)
 
 
-def shortest_path_bitmask(n, m, k, shops, roads):
+def shortest_path(n, m, k, shops, roads):
     INF = 10**9
 
     dist = [[INF] * (1 << 10) for _ in range(n + 1)]
